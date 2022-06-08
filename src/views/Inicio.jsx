@@ -10,8 +10,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom'
-
-
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../firebase/firebase-config"
 const theme = createTheme();
 
 export default function Homepage() {
@@ -23,8 +23,20 @@ export default function Homepage() {
       email: data.get('email'),
       password: data.get('password'),
     });
+  signInWithEmailAndPassword(auth, data.get('email'),data.get('password'))
+  .then((userCredential) => {
+    // Signed in
+    const user = userCredential.user;
+    console.log(user)
     navigate('/home/activos')
+  })
+  .catch((error) => {
+    const errorMessage = error.message;
+    console.log(errorMessage);
+  });
+    
   };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -70,7 +82,7 @@ export default function Homepage() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Ingresar
             </Button>
             <Grid container>
               <Grid item xs>
